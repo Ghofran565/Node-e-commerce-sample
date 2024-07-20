@@ -6,6 +6,7 @@ import path from 'path';
 import cors from 'cors';
 
 /// custom imports \\\
+import uploadRouter from './Routes/upload.js';
 import authRouter from './Routes/auth.js';
 import userRouter from './Routes/user.js';
 import cartRouter from './Routes/cart.js';
@@ -20,7 +21,7 @@ import catchError from './Utils/catchError.js';
 import HandleError from './Utils/handleError.js';
 
 const __filename = fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
+export const __dirname = path.dirname(__filename); 
 
 /// required app uses \\\
 const app = express();
@@ -31,6 +32,7 @@ app.use(morgan('dev'));
 app.use(cors()); //fill with front local path
 
 /// custom app uses \\\
+app.use('/api/upload', uploadRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/cart', cartRouter);
