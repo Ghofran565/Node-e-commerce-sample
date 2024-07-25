@@ -8,7 +8,7 @@ const isLogin = catchAsync(async (req, res, next) => {
 			new HandleError(
 				'You have not send any token. please send one to check if you loged in.',
 				401
-			)
+			) //! continue 
 		);
 	}
 	const token = jwt.verify(

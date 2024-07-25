@@ -7,7 +7,7 @@ export const protect = (req, res, next) => {
 		return next(new HandleError('Not authorized. No token provided.', 401));
 	}
 
-	try {
+	try { //! continue 
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		req.user = decoded; 
 		next();

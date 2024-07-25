@@ -1,39 +1,66 @@
-import HandleError from './handleError.js';
-import nodemailer from 'nodemailer';
+import HandleError from "./handleError.js";
+import nodemailer from "nodemailer";
+
+let authArray = [];
 
 export const sendEmailCode = async (email) => {
-	const transporter = nodemailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: process.env.EMAIL_USER,
-			pass: process.env.EMAIL_PASSWORD,
-		},
-	});
-	const mailOptions = {
-		from: process.env.EMAIL_USER,
-		to: email,
-		subject: '👋 Hello from Node.js 🚀',
-		text: `This is a test email sent from Node.js using nodemailer. 📧💻 your email is ${email}`,
-	};
-	transporter.sendMail(mailOptions, (error, info) => {
-		if (error) {
-			return next(
-				new HandleError(
-					'Couldnt send the email. havent you done sth criminal ?',
-					500
-				)
-			);
-		} else {
-			console.log('✅ Email sent:', info.response); //maybe wanna not use
-		}
-	});
+  ///generating auth code
+  const generatedCode = 12345;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "👋 Hello from Node.js 🚀",
+    text: `This is a test email sent from Node.js using nodemailer. 📧💻 your email is ${email} , your code is ${generatedCode}`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return next(
+        new HandleError(
+          "Couldnt send the email. haven't you done something criminal?",
+          500
+        )
+      );
+    } else {
+      console.log("✅ Email sent:", info.response); //maybe wanna not use
+
+      lengthAuthArray = authArray.length();
+
+      authArray.push({ email, code: generatedCode });
+
+      if (lengthAuthArray > authArray.length()) {
+        console.log("✅ pushed to auth array successfully");
+      } else {
+        console.log("pushed to auth array was unsuccessful");
+      }
+    }
+  });
 };
 
 export const verifyEmailCode = async (email, code) => {
-	return next(
-		new HandleError(
-			`email : ${email} , code : ${code} , I'm sorry but verifying email code part hasn't setted up yet.`,
-			500
-		)
-	);
+  const findemail = authArray.find((auth) => auth.email === email);
+  if (!findemail) {
+    return next(
+      new HandleError(
+        "Email unauthorized. Please request sending an email first.",
+        401
+      )
+    );
+  }
+  if (!findemail.code == code && !findemail.email == email) {
+    return { success: false, authorized: false, message: "Wrong code." };
+  } else {
+    return {
+      success: true,
+      authorized: true,
+      message: "Email authorized successfully.",
+    };
+  }
 };

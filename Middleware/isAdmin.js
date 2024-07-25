@@ -12,7 +12,7 @@ const isAdmin = catchAsync(async (req, res, next) => {
 		req.headers.authorization.split(' ')[1],
 		process.env.JWT_SECRET
 	);
-	if (role !== 'admin')
+	if (role !== 'admin' && role !== 'superAdmin')  //! continue 
 		return next(
 			new HandleError(
 				"Access denied. You don't have permission because you are not admin.",
