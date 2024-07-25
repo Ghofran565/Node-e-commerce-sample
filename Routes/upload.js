@@ -1,7 +1,13 @@
 import express from 'express';
+import upload from '../Utils/UploadFile.js';
+import isAdmin from '../Middleware/isAdmin.js';
+import { deleteFile, uploadFile } from '../Controllers/uploadCn.js';
 
 const router = express.Router();
 
-export default router;
+router
+	.route('/')
+	.post(isAdmin, upload.single('file'), uploadFile)
+	.delete(isAdmin, deleteFile);
 
-//TODO have to chenge by whatever nr.Aghaeee said
+export default router;

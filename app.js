@@ -16,7 +16,6 @@ import orderHistoryRouter from './Routes/orderHistory.js';
 import productRouter from './Routes/product.js';
 import sliderRouter from './Routes/slider.js';
 import discountCodeRouter from './Routes/discountCode.js';
-
 import catchError from './Utils/catchError.js';
 import HandleError from './Utils/handleError.js';
 
