@@ -22,7 +22,7 @@ const cartSchema = new mongoose.Schema({ //! continue
   ],
 });
 
-const userSchema = new mongoose.Schema( //! continue 
+const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema( //! continue
     favoriteProducts: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     },
-    isAccountComplete: {
+    isComplete: {
       type: Boolean,
       default: false,
     },

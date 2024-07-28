@@ -1,6 +1,7 @@
 import handleError from './handleError.js';
+import catchAsync from '../Utils/catchAsync.js';
 
-export const sendAuthCode = async (Mobile) => {
+export const sendAuthCode = catchAsync(async (Mobile, next) => {
 	try {
 		const res = await fetch('https://api.limosms.com/api/sendcode', {
 			method: 'POST',
@@ -16,11 +17,11 @@ export const sendAuthCode = async (Mobile) => {
 		const data = await res.json();
 		return data;
 	} catch (error) {
-		return next(new handleError('Sending sms code was unsuccessful', 500));
+		return next(new handleError('Sending SMS code was unsuccessful', 500));
 	}
-};
+});
 
-export const verifyCode = async (Mobile, Code) => {
+export const verifyCode = catchAsync(async (Mobile, Code, next) => {
 	try {
 		const res = await fetch('https://api.limosms.com/api/checkcode', {
 			method: 'POST',
@@ -36,6 +37,6 @@ export const verifyCode = async (Mobile, Code) => {
 		const data = await res.json();
 		return data;
 	} catch (error) {
-		return { success: false, message: 'Verifing sms code was unsuccessful' };
+		return next(new handleError('Verifying SMS code was unsuccessful', 500));
 	}
-};
+});

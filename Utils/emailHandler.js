@@ -1,68 +1,68 @@
-import HandleError from "./handleError.js";
-import nodemailer from "nodemailer";
-import crypto from "crypto"
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
+import EmailVerification from '../Models/emailVerificationMd.js';
+import HandleError from './handleError.js';
+import catchAsync from '../Utils/catchAsync.js';
 
-export const sendEmailCode = async (email) => {
-  ///generating auth code
-  const generatedCode = crypto.randomInt(10000,99999).toString();
-
-
-  
-
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "👋 Hello from Node.js 🚀",
-    text: `This is a test email sent from Node.js using nodemailer. 📧💻 your email is ${email} , your code is ${generatedCode}`,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return next(
-        new HandleError(
-          "Couldnt send the email. haven't you done something criminal?",
-          500
-        )
-      );
-    } else {
-      console.log("✅ Email sent:", info.response); //maybe wanna not use
-
-      lengthAuthArray = authArray.length();
-
-      authArray.push({ email, code: generatedCode });
-
-      if (lengthAuthArray > authArray.length()) {
-        console.log("✅ pushed to auth array successfully");
-      } else {
-        console.log("pushed to auth array was unsuccessful");
-      }
-    }
-  });
+const createTransporter = () => {
+	return nodemailer.createTransport({
+		//? maybe wanna not to use gmail 
+		service: 'gmail',
+		auth: {
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_PASSWORD,
+		},
+	});
 };
 
-export const verifyEmailCode = async (email, code) => {
-  const findemail = authArray.find((auth) => auth.email === email);
-  if (!findemail) {
-    return next(
-      new HandleError(
-        "Email unauthorized. Please request sending an email first.",
-        401
-      )
-    );
-  }
-  if (!findemail.code == code && !findemail.email == email) {
-    return { success: false, authorized: false, message: "Wrong code." };
-  } else {
-    return {
-      success: true,
-      authorized: true,
-      message: "Email authorized successfully.",
-    };
-  }
+const generateVerificationCode = () => {
+	return crypto.randomInt(10000, 99999).toString();
 };
+
+const sendMail = async (transporter, mailOptions) => {
+	await transporter.sendMail(mailOptions);
+};
+
+export const sendEmailCode = catchAsync(async (email, next) => {
+	const generatedCode = generateVerificationCode();
+	await EmailVerification.create({ email, code: generatedCode });
+
+	const transporter = createTransporter();
+	const mailOptions = {
+		from: process.env.EMAIL_USER,
+		to: email,
+		subject: '👋 Hello from Node.js 🚀',
+		text: `This is a test email sent from Node.js using nodemailer. 📧💻 Your email is ${email}, and your code is ${generatedCode}. It expires in 5 minutes.`,
+	};
+
+	try {
+		await sendMail(transporter, mailOptions);
+	} catch (error) {
+		return next(new HandleError('Could not send the email. Please try again later.', 500));
+	}
+
+	return {
+		success: true,
+		message: 'Email sent successfully.',
+	};
+});
+
+export const verifyEmailCode = catchAsync(async (email, code) => {
+	const emailVerificationCheck = await EmailVerification.findOne({
+		email,
+		code,
+	});
+
+	if (!emailVerificationCheck) {
+		return {
+			authorized: false,
+			// message: 'Verification code is incorrect or expired.',
+		};
+	} else {
+		await EmailVerification.deleteMany({ email });
+		return {
+			authorized: true,
+			// message: 'Email authorized successfully.',
+		};
+	}
+});
