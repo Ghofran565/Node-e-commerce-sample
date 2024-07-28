@@ -13,6 +13,7 @@ export const auth = catchAsync(async (req, res, next) => {
   }
   const user = await User.findOne({ email });
   if (!user || !user.password) {
+	//? dont wanna add sth like use your code you not allow to send another ?
     await sendEmailCode(email);
     return res.status(200).json({
       success: true,
@@ -22,7 +23,7 @@ export const auth = catchAsync(async (req, res, next) => {
   }
   return res.status(200).json({
     success: true,
-    message: "User exists. So user will offered to login by using password",
+    message: "User exists and has a password. So user will offer to login by entaring password",
     isExist: true,
   });
 });
@@ -118,7 +119,7 @@ export const verifyingEmailCode = catchAsync(async (req, res, next) => {
 });
 
 export const forgetPassword = catchAsync(async (req, res, next) => {
-  const { phone } = req.body; //! continue + writing new Cn for verifying Email
+  const { phone } = req.body; //! continue + writing new Cn for verifying Email add expire time and delete after checking fron let array
   const user = await User.findOne({ phone });
 
   if (!user) {

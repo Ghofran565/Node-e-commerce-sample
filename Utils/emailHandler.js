@@ -1,11 +1,13 @@
 import HandleError from "./handleError.js";
 import nodemailer from "nodemailer";
-
-let authArray = [];
+import crypto from "crypto"
 
 export const sendEmailCode = async (email) => {
   ///generating auth code
-  const generatedCode = 12345;
+  const generatedCode = crypto.randomInt(10000,99999).toString();
+
+
+  
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
