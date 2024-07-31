@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema({ //! continue 
+const cartSchema = new mongoose.Schema({
   totalPrice: {
     type: Number,
     default: 0,

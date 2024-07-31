@@ -1,8 +1,8 @@
-import catchAsync from '../Utils/catchAsync.js';
-import HandleError from '../Utils/handleError.js';
 import jwt from 'jsonwebtoken';
+import HandleError from '../Utils/handleError.js';
+import catchAsync from '../Utils/catchAsync.js';
 
-const isLogin = catchAsync(async (req, res, next) => {
+const protect = catchAsync(async (req, res, next) => {
 	let token;
 	if (
 		req.headers.authorization &&
@@ -13,7 +13,10 @@ const isLogin = catchAsync(async (req, res, next) => {
 
 	if (!token) {
 		return next(
-			new HandleError('Authentication required. Please log in.', 401)
+			new HandleError(
+				'Authentication required. Please log in.',
+				401
+			)
 		);
 	}
 
@@ -23,4 +26,4 @@ const isLogin = catchAsync(async (req, res, next) => {
 	return next();
 });
 
-export default isLogin;
+export default protect;

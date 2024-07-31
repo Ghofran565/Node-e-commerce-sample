@@ -26,7 +26,7 @@ const isAdmin = (allowedRoles) =>
 		if (!allowedRoles.includes(role)) {
 			return next(
 				new HandleError(
-					"Access denied. You don't have permission for this action.",
+					`Access denied. You don't have permission for this action because you are not ${allowedRoles}.`,
 					403
 				)
 			);

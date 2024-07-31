@@ -8,7 +8,7 @@ import {
 	sendingEmailCode,
 	verifyingEmailCode,
 } from '../Controllers/authCn.js';
-import { protect } from '../Middleware/authMidware.js';
+import isLogin from '../Middleware/isLogin.js';
 
 const router = express.Router();
 
@@ -18,6 +18,6 @@ router.route('/send-code').post(sendingEmailCode);
 router.route('/check-smtp').post(verifyingEmailCode);
 router.route('/forget-password').post(forgetPassword);
 router.route('/forget-password-check').post(checkForgetPassword);
-router.route('/change-password').patch(protect, changePassword);
+router.route('/change-password').patch(isLogin, changePassword);
 
 export default router;
