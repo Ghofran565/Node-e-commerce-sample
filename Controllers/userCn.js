@@ -16,7 +16,7 @@ export const getAllUser = catchAsync(async (req, res, next) => {
 	const users = await userFeatures.query;
 	return res.status(200).json({
 		success: true,
-		data: users,
+		data: {users},
 	});
 });
 
@@ -37,7 +37,7 @@ export const getOneUser = catchAsync(async (req, res, next) => {
 	}
 	return res.status(200).json({
 		success: true,
-		data: user,
+		data: {user},
 	});
 });
 
@@ -84,8 +84,8 @@ export const updateUser = catchAsync(async (req, res, next) => {
 		}
 		return res.status(200).json({
 			success: true,
-			message: `User with ID ${id} updated successfully by superAdmin. Password updated: ${isPasswordExist}`,
-			data: updatedUser,
+			message: `User with ID ${id} updated successfully by superAdmin. Password updated?: ${true}`,
+			data: {updatedUser},
 		});
 	} else if (id === userId || tokenRole === 'admin') {
 		if (isPasswordExist) {
@@ -106,7 +106,7 @@ export const updateUser = catchAsync(async (req, res, next) => {
 		return res.status(200).json({
 			success: true,
 			message: `User with ID ${id} updated successfully by admin or user themselves.`,
-			data: updatedUser,
+			data: {updatedUser},
 		});
 	} else {
 		return next(

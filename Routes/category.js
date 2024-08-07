@@ -4,6 +4,7 @@ import {
 	getOneCategory,
 	createCategory,
 	updateCategory,
+	deleteCategory,
 } from '../Controllers/categoryCn.js';
 import isAdmin from '../Middleware/isAdmin.js';
 import isLogin from '../Middleware/isLogin.js';
@@ -16,6 +17,8 @@ router.route('/')
 
 router.route('/:id')
 	.get(isAdmin(['admin', 'superAdmin']), getOneCategory)
-	.patch(isAdmin(['superAdmin']), updateCategory);
+	.patch(isAdmin(['superAdmin']), updateCategory)
+	.delete(isAdmin(['admin', 'superAdmin']), deleteCategory)
+
 
 export default router;
