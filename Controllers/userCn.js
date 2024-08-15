@@ -87,7 +87,7 @@ export const updateUser = catchAsync(async (req, res, next) => {
 			message: `User with ID ${id} updated successfully by superAdmin. Password updated?: ${true}`,
 			data: {updatedUser},
 		});
-	} else if (id === userId || tokenRole === 'admin') {
+	} else if (id === userId) {
 		if (isPasswordExist) {
 			updatedUser = await User.findByIdAndUpdate(
 				id,

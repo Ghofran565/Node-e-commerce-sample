@@ -1,14 +1,20 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const variantSchema = new mongoose.Schema({
-  ///
-});
+const variantSchema = new mongoose.Schema(
+	{
+		type: {
+			type: String,
+			enum: ['color', 'size'],
+			required: [true, 'Type is required.'],
+		},
+		value: {
+			type: String,
+			required: [true, 'Value is required.'],
+		},
+	},
+	{ timestamps: true }
+);
 
-const Variant = mongoose.model("Variant", variantSchema);
+const Variant = mongoose.model('Variant', variantSchema);
 
 export default Variant;
-
-///
-
-
-//! continue

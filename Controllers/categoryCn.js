@@ -43,7 +43,14 @@ export const createCategory = catchAsync(async (req, res, next) => {
 
 export const updateCategory = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
-	const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
+	const { image = '', ...others } = req.body;
+	const category = await Category.findById(id);
+	if (image && image !== category.image) {
+		fs.unlinkSync(`${__dirname}/public/${brand.image}`);
+	}
+	const updateData = image ? req.body : others;
+
+	const updatedCategory = await Category.findByIdAndUpdate(id, updateData, {
 		new: true,
 		runValidators: true,
 	});
@@ -57,7 +64,7 @@ export const updateCategory = catchAsync(async (req, res, next) => {
 	});
 });
 
-export const deleteCategory = catchAsync(async (req, res, next) => { //? is working right ??
+export const deleteCategory = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
 	const deletedCategory = await Category.findByIdAndDelete(id);
 	if (!deletedCategory) {

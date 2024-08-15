@@ -64,7 +64,6 @@ export const updateCategory = catchAsync(async (req, res, next) => {
 });
 
 export const deleteCategory = catchAsync(async (req, res, next) => {
-  //? is working right ??
   const { id } = req.params;
   const deletedCategory = await Category.findByIdAndDelete(id);
   if (!deletedCategory) {

@@ -17,6 +17,7 @@ import orderHistoryRouter from './Routes/orderHistory.js';
 import productRouter from './Routes/product.js';
 import sliderRouter from './Routes/slider.js';
 import discountCodeRouter from './Routes/discountCode.js';
+import brandRouter from './Routes/brand.js';
 import catchError from './Utils/catchError.js';
 import HandleError from './Utils/handleError.js';
 
@@ -43,6 +44,7 @@ app.use('/api/history', orderHistoryRouter);
 app.use('/api/product', productRouter);
 app.use('/api/slider', sliderRouter);
 app.use('/api/discount', discountCodeRouter);
+app.use('/api/brand', brandRouter);
 
 app.use('*', (req, res, next) => {
 	return next(new HandleError('Invalid route', 404));

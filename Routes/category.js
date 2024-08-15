@@ -13,12 +13,12 @@ const router = express.Router();
 
 router.route('/')
 	.get(isLogin, getAllCategory)
-	.post(isAdmin(['superAdmin']), createCategory);
+	.post(isAdmin(['admin']), createCategory);
 
 router.route('/:id')
-	.get(isAdmin(['admin', 'superAdmin']), getOneCategory)
-	.patch(isAdmin(['superAdmin']), updateCategory)
-	.delete(isAdmin(['admin', 'superAdmin']), deleteCategory)
+	.get(isAdmin(['admin']), getOneCategory)
+	.patch(isAdmin(['admin']), updateCategory)
+	.delete(isAdmin(['admin']), deleteCategory)
 
 
 export default router;

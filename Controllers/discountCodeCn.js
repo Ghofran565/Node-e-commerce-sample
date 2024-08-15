@@ -5,7 +5,7 @@ import DiscountCode from '../Models/discountCodeMd.js';
 import User from '../Models/userMd.js';
 
 export const getAllDiscountCode = catchAsync(async (req, res, next) => {
-	const discountCodeFeatures = new ApiFeatures(DiscountCode, req.query)
+	const discountCodeFeatures = new ApiFeatures(DiscountCode, req?.query)
 		.filters()
 		.sort()
 		.limitFields()
@@ -26,12 +26,12 @@ export const getOneDiscountCode = catchAsync(async (req, res, next) => {
 	}
 	return res.status(200).json({
 		success: true,
-		data: { category },
+		data: { discountCode },
 	});
 });
 
 export const createDiscountCode = catchAsync(async (req, res, next) => {
-	const newDiscountCode = await DiscountCode.create(req.body);
+	const newDiscountCode = await DiscountCode.create(req?.body);
 	return res.status(200).json({
 		success: true,
 		message: 'DiscountCode created successfully.',
@@ -41,10 +41,14 @@ export const createDiscountCode = catchAsync(async (req, res, next) => {
 
 export const updateDiscountCode = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
-	const updatedDiscountCode = await DiscountCode.findByIdAndUpdate(id, req.body, {
-		new: true,
-		runValidators: true,
-	});
+	const updatedDiscountCode = await DiscountCode.findByIdAndUpdate(
+		id,
+		req?.body,
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
 	if (!updatedDiscountCode) {
 		return next(new HandleError(`DiscountCode with ID ${id} not found.`, 404));
 	}
@@ -55,57 +59,52 @@ export const updateDiscountCode = catchAsync(async (req, res, next) => {
 	});
 });
 
-export const checkDiscountCode = catchAsync(async (req, res, next) => { 
+export const checkDiscountCode = catchAsync(async (req, res, next) => {
 	const { id: userId } = req.decodedToken;
-    const {code:discountCodeBody} = req.body
-    const now =new Date().now()
-    if(!discountCodeBody){
-        return next(
+	const { code: discountCodeBody } = req?.body;
+	const now = Date.now();
+
+	if (!discountCodeBody) {
+		return next(
+			new HandleError('Please provide a discount code.', 400)
+		);
+	}
+
+	const user = await User.findById(userId);
+	if (!user) {
+		return next(
 			new HandleError(
-				"You have not send any code in the body.",
+				`User not found. This shouldn't happen, as we're getting the ID from the token!`,
 				400
 			)
 		);
-    }
-	const discountCode = await DiscountCode.findOne({code:discountCodeBody});
-    if(!discountCode){
-        return next(
-            new HandleError(
-                "Discount code does not exist.",
-				400
-			)
-		);
-    }
-    const user = await User.findById(userId);
-    if(!user){
-        return next(
-            new HandleError(
-                "User does not exist. how you dont exist I am picking the ID from token !",
-				400
-			)
-		);
-    }
+	}
 
-    if(discountCode.expireTime < now || discountCode.startTime > now ){
-        return next(
-            new HandleError(
-                "DiscountCode expired or didnt started yet",
-				400
-			)
-		); 
-    }
-    if(user.usedDiscountCode.includes(discountCodeBody)){
-        return next(
-            new HandleError(
-                "DiscountCode have used by user",
-				400
-			)
-		); 
-    }
+	const discountCode = await DiscountCode.findOne({ code: discountCodeBody });
+	if (!discountCode) {
+		return res.status(200).json({
+			success: true,
+			message: 'Discount code does not exist.',
+		});
+	}
 
-    return res.status(200).json({
+	if (discountCode.expireTime < now || discountCode.startTime > now) {
+		return res.status(200).json({
+			success: true,
+			message: 'This discount code is either expired or not yet active.',
+		});
+	}
+
+	if (user?.usedDiscountCode?.includes(discountCodeBody)) {
+		return res.status(200).json({
+			success: true,
+			message: 'You have already used this discount code.',
+		});
+	}
+
+	return res.status(200).json({
 		success: true,
-		message: `DiscountCode validated successfully`,
-		data: { updatedDiscountCode }, //! continue and after this check and clean this Cn 1:48:01
+		message: 'Discount code is valid!',
+		data: { discount: discountCode.discount },
 	});
 });

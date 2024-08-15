@@ -7,7 +7,7 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(isAdmin, upload.single('file'), uploadFile)
-	.delete(isAdmin, deleteFile);
+	.post(isAdmin(['admin']), upload.single('file'), uploadFile)
+	.delete(isAdmin(['admin']), deleteFile);
 
 export default router;

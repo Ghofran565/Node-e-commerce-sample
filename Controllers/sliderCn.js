@@ -22,13 +22,18 @@ export const createSlider = catchAsync(async (req, res, next) => {
 });
 
 export const deleteSlider = catchAsync(async (req, res, next) => {
-	//? is working right???
 	const { id } = req.params;
 	const deletedSlider = await Slider.findByIdAndDelete(id);
 	if (!deletedSlider) {
 		return next(new HandleError(`Slider with ID ${id} not found.`, 404));
 	}
-	fs.unlinkSync(`${__dirname}/public/${deletedSlider.image}`);
+
+	try {
+		await fs.unlink(`${__dirname}/public/${deletedSlider.image}`);
+	} catch (error) {
+		return next(new HandleError(`Failed to delete the slider image.`, 500));
+	}
+
 	return res.status(200).json({
 		success: true,
 		message: 'Slider deleted successfully.',

@@ -190,7 +190,6 @@ export const changePassword = catchAsync(async (req, res, next) => {
 	}
 
 	const hashedPassword = bcryptjs.hashSync(password, 10);
-
 	const user = await User.findByIdAndUpdate(
 		id,
 		{ password: hashedPassword },

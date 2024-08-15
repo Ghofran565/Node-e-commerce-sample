@@ -15,22 +15,30 @@ const isAdmin = (allowedRoles) =>
 		if (!token) {
 			return next(
 				new HandleError(
-					'You have not sent any token. Please send one to check if you are logged in.',
+					"Oops! No token found. Please send a token so we can verify if you're logged in.",
 					401
 				)
 			);
 		}
 
-		const { role } = jwt.verify(token, process.env.JWT_SECRET);
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const { role } = decoded;
+
+		// If superAdmin is allowed, admin should automatically be allowed too
+		if (allowedRoles.includes('superAdmin')) {
+			allowedRoles.push('admin');
+		}
 
 		if (!allowedRoles.includes(role)) {
 			return next(
 				new HandleError(
-					`Access denied. You don't have permission for this action because you are not ${allowedRoles}.`,
+					`Access denied. This action is reserved for roles: ${allowedRoles.join(', ')}.`,
 					403
 				)
 			);
 		}
+
+		req.decodedToken = decoded;
 		return next();
 	});
 

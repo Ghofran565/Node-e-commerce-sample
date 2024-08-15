@@ -11,8 +11,8 @@ const router = express.Router();
 router
 	.route('/')
 	.get(getAllSlider)
-	.post(isAdmin(['superAdmin']), createSlider);
+	.post(isAdmin(['admin']), createSlider);
 
-router.route('/:id').delete(isAdmin(['admin', 'superAdmin']), deleteSlider);
+router.route('/:id').delete(isAdmin(['admin']), deleteSlider);
 
 export default router;
