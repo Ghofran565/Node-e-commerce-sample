@@ -34,6 +34,8 @@ export const getOneComment = catchAsync(async (req, res, next) => {
 export const createComment = catchAsync(async (req, res, next) => {
 	const { id } = req.decodedToken;
 	const newComment = await Comment.create({ ...req?.body, userId: id });
+	//* continue!! 9th session
+
 	return res.status(200).json({
 		success: true,
 		message: 'Comment created successfully.',
