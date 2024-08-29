@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Product from './productMd';
 
 const cartSchema = new mongoose.Schema({
 	totalPrice: {
@@ -52,7 +53,10 @@ const userSchema = new mongoose.Schema(
 			type: String,
 		},
 		recentlyProduct: {
-			type: Array,
+			type: [{
+				type:mongoose.Schema.Types.ObjectId,
+				ref:'Product'
+			}],
 			default: [],
 		},
 		usedDiscountCode: {
@@ -61,6 +65,7 @@ const userSchema = new mongoose.Schema(
 		},
 		favoriteProducts: {
 			type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+			default: [],
 		},
 		isComplete: {
 			type: Boolean,

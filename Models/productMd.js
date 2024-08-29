@@ -30,11 +30,15 @@ const productSchema = new mongoose.Schema(
 		defaultVariant:[ {
 			type: Number,
 			default:0
-		}],
-		productVariant:[ {
+		}], 
+		productVariantIds:[ {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'ProductVariant',
 		}],
+		isActive: {
+			type:Boolean,
+			default:false,
+		},
 	},
 	{ timestamps: true }
 );
