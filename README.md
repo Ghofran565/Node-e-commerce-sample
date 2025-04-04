@@ -50,9 +50,10 @@ This project has been **discontinued**. The creator is no longer working on it, 
 
 ## Development Phase
 
-**Phase**: **Discontinued**
+**Phase**: **In Development**
 
-**Status**: This project is no longer maintained. The creator may not respond to issues or questions.
+**Current Focus**:
+- Replanning this project from the bottom to the end because of many changes caused by the time this repo was in the discontinued phase.  
 
 ## Common Issues
 
