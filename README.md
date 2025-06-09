@@ -7,7 +7,7 @@ This repository hosts an **E-commerce API** built with Node.js, designed to mana
 
 # Important
 
-This project has been **discontinued**. The creator is no longer working on it, and it may not be continued in the future.
+This project **was discontinued**. The creator is now replanning to start this project again.
 
 ## Project Structure
 
@@ -50,7 +50,7 @@ This project has been **discontinued**. The creator is no longer working on it, 
 
 ## Development Phase
 
-**Phase**: **In Development**
+**Phase**: **Under Planning**
 
 **Current Focus**:
 - Replanning this project from the bottom to the end because of many changes caused by the time this repo was in the discontinued phase.  
